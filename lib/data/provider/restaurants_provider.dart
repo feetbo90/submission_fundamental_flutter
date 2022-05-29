@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission1_fund_flutter/data/model/response/detail_restaurant.dart';
 import 'package:submission1_fund_flutter/data/model/response/restaurants.dart';
 import 'package:submission1_fund_flutter/data/model/response/search_restaurants.dart';
 import '../api/api_service.dart';
@@ -14,6 +15,8 @@ class RestaurantsProvider extends ChangeNotifier {
 
   late Restaurants _restaurantsResult;
   late SearchRestaurants _searchRestaurantsResult;
+  late DetailRestaurant _restaurantDetail;
+
   late ResultState _state;
   String _message = '';
   String _query = "";
@@ -26,7 +29,7 @@ class RestaurantsProvider extends ChangeNotifier {
 
   SearchRestaurants get searchResult => _searchRestaurantsResult;
 
-
+  DetailRestaurant get detailRestaurant => _restaurantDetail;
   Future<dynamic> _fetchAllRestaurants() async {
     try {
       _state = ResultState.loading;
@@ -67,6 +70,32 @@ class RestaurantsProvider extends ChangeNotifier {
       notifyListeners();
       return _message = 'Error --> $e';
     }
+  }
+
+  Future<dynamic> _fetchRestaurant(String id) async {
+    try {
+      _state = ResultState.loading;
+      notifyListeners();
+      final response = await apiService.getDetail(id);
+      if (!response.error) {
+        _state = ResultState.hasData;
+        notifyListeners();
+        return _restaurantDetail = response;
+      } else {
+        _state = ResultState.noData;
+        notifyListeners();
+        return _message = "No data found";
+      }
+    } catch (e) {
+      _state = ResultState.error;
+      notifyListeners();
+      return _message = 'Error --> $e';
+    }
+  }
+
+  RestaurantsProvider getRestaurant(String id) {
+    _fetchRestaurant(id);
+    return this;
   }
 
   void onSearch(String query) {
