@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../model/restaurant.dart';
-import '../utils/color_random.dart';
+import 'package:submission1_fund_flutter/data/model/response/restaurant.dart';
+import '../../utils/color_random.dart';
 
 var informationTextStyle = const TextStyle(fontFamily: 'Oxygen', fontSize: 13);
 
 class DetailsScreens extends StatelessWidget {
   static const routeName = '/restaurant_detail';
 
-  final RestaurantElement restaurant;
+  final Restaurant restaurant;
 
   const DetailsScreens({Key? key, required this.restaurant}) : super(key: key);
 
